@@ -1,23 +1,19 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : mysql
-Source Server Version : 50721
+Source Server         : Project
+Source Server Version : 50716
 Source Host           : localhost:3306
-Source Database       : icode_usermanage_sevice
+Source Database       : icode_msp_user
 
 Target Server Type    : MYSQL
-Target Server Version : 50721
+Target Server Version : 50716
 File Encoding         : 65001
 
-Date: 2018-11-20 17:31:12
+Date: 2019-06-02 17:39:08
 */
 
 SET FOREIGN_KEY_CHECKS=0;
-
-
-create database icode_msp_user;
-
 
 -- ----------------------------
 -- Table structure for user
@@ -42,6 +38,5 @@ CREATE TABLE `user` (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES ('123456', 'Abc', null, null, null, null, null, null, null, null, null, null);
-INSERT INTO `user` VALUES ('1234561', 'Almare', '123456', '1362574001@qq.com', '13101303532', '2018-11-15 22:25:33', 'https://www.baidu.com/asdfasdf.jpg', '100', '0', '0', null, '2018-11-30 22:25:47');
-
+INSERT INTO `user` VALUES ('123456', '张三', 'e10adc3949ba59abbe56e057f20f883e', '763484619@qq.com', '15317946548', null, null, null, '1', null, null, null);
+INSERT INTO `user` VALUES ('admin', '李四', 'e10adc3949ba59abbe56e057f20f883e', '648134945@qq.com', '15346572541', null, null, null, '1', null, null, null);

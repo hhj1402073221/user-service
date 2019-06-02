@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.icode.msp.user.repository.UserRepository">
+    <resultMap id="BaseResultMap" type="org.icode.msp.user.domain.User">
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="head_portrait" property="headPortrait"/>
+        <result column="sex" property="sex"/>
+        <result column="email" property="email"/>
+        <result column="tel" property="tel"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result column="level" property="level"/>
+        <result column="state" property="state"/>
+        <result column="last_login_time" property="lastLoginTime" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <resultMap id="UserDropMap" type="org.icode.msp.user.dto.UserDrop">
+        <result column="account" property="account"/>
+        <result column="nickname" property="nickname"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <resultMap id="User4Org" type="org.icode.msp.user.domain.User4Org">
+        <result column="account" property="id"/>
+        <result column="nickname" property="name"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        account, password, nickname, head_portrait, sex, email, tel, create_time, level, state, last_login_time, remark
+    </sql>
+
+    <select id="existsByAccount" resultType="java.lang.Integer" parameterType="java.lang.String">
+        select count(*) as is_existed from user where user.account = #{account}
+    </select>
+
+    <select id="getOneByAccount" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select * from user WHERE user.account = #{account}
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user
+    </select>
+
+    <select id="findByCondition" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        FROM user where 1 = 1
+        <foreach collection="condition" index="key" item="value">
+            and ${key} like '%${value}%'
+        </foreach>
+    </select>
+
+    <insert id="save" parameterType="org.icode.msp.user.domain.User">
+        <selectKey keyProperty="count" resultType="java.lang.Integer" order="BEFORE">
+            select count(*) from user where user.account = #{account}
+        </selectKey>
+        <if test="count > 0">
+            update user
+            <set>
+                account = #{account},
+                <if test="password != null">
+                    password = #{password},
+                </if>
+                <if test="nickname != null">
+                    nickname = #{nickname},
+                </if>
+                head_portrait = #{headPortrait},
+                sex = #{sex},
+                <if test="email != null">
+                    email = #{email},
+                </if>
+                <if test="tel != null">
+                    tel = #{tel},
+                </if>
+                create_time = #{createTime},
+                `level` = #{level},
+                <if test="state != null">
+                    state = #{state},
+                </if>
+                last_login_time = #{lastLoginTime},
+                remark = #{remark},
+            </set>
+            <where>
+                user.account = #{account}
+            </where>
+        </if>
+        <if test="count == 0">
+            insert into user (
+            <include refid="Base_Column_List"/>
+            )
+            values(
+            #{account}, #{password}, #{nickname}, #{headPortrait}, #{sex}, #{email}, #{tel}, #{createTime}, #{level}, #{state},
+            #{lastLoginTime}, #{remark}
+            )
+        </if>
+    </insert>
+
+    <update id="updataColumnInBatch" parameterType="java.util.List">
+        <if test="accounts != null and accounts.size() > 0">
+            update user set ${columnName} = #{value} where account in
+            <foreach collection="accounts" item="account" separator="," open="(" close=")">
+                #{account}
+            </foreach>
+        </if>
+    </update>
+
+    <select id="count" resultType="java.lang.Long">
+        SELECT count(*) FROM user
+    </select>
+
+    <delete id="deleteByAccount" parameterType="java.lang.String">
+        delete from user where user.account = #{account}
+    </delete>
+
+    <delete id="delete" parameterType="org.icode.msp.user.domain.User">
+        delete from user where user.account = #{account}
+    </delete>
+
+    <delete id="deleteAll">
+        delete from user
+    </delete>
+
+    <delete id="deleteInBatch" parameterType="java.util.List">
+        delete from user where user.account in
+        <foreach collection="list" item="item" index="index"
+                 open="(" separator="," close=")">
+            #{item.account}
+        </foreach>
+    </delete>
+
+    <select id="getUserDrop" resultMap="UserDropMap">
+        SELECT account, nickname, remark  FROM user
+    </select>
+
+    <select id="findByAccounts" resultMap="BaseResultMap">
+        <if test="accounts != null and accounts.size() > 0">
+            SELECT
+            <include refid="Base_Column_List"/>
+            from user where account in
+            <foreach collection="accounts" item="account" open="(" close=")" separator=", ">
+                #{account}
+            </foreach>
+        </if>
+
+    </select>
+
+    <select id="getUnassignedUsers" resultMap="User4Org">
+        SELECT account , nickname FROM user
+        <if test="exclude != null and exclude.size() > 0">
+            where account not in
+            <foreach collection="exclude" item="item" open="(" close=")" separator=", ">
+                #{item.id}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

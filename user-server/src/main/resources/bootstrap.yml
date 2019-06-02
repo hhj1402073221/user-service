@@ -1,0 +1,51 @@
+server:
+  port: 1000
+
+eureka:
+  client:
+    register-with-eureka: true
+#    register-with-eureka: false
+    fetch-registry: true
+#    fetch-registry: false
+    service-url:
+      defaultZone: http://localhost:8761//eureka
+
+spring:
+  application:
+    name: icode-msp-user-service
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://120.78.156.27:3306/icode_msp_user?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123456
+
+mybatis:
+  mapper-locations: classpath*:org.icode.msp.user.repository/*Mapper.xml
+  type-aliases-package: org.icode.msp.user.domain  # 实体类的包路径
+
+logging:
+  level:
+    org.icode.msp.resource.repository: debug
+    org.icode.msp.resource.config: debug
+
+
+
+#Spring:
+#  application:
+#    name: icode-msp-user-service
+#  cloud:
+#    config:
+#      discovery:
+#        enabled: true
+#        service-id: icode-msp-config-service
+#      profile: dev
+##      profile: tcldev
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://icode-msp-eureka-service:8761/eureka/
+#  instance:
+#    prefer-ip-address: true
+##      defaultZone: http://c7-master:8761/eureka/
